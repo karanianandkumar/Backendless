@@ -1,12 +1,20 @@
 package com.anandkumar.myapplication;
 
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import java.io.IOException;
 
 
 /**
@@ -14,6 +22,7 @@ import android.view.ViewGroup;
  */
 public class DemoFragment extends Fragment {
 
+    public static final int CHOOSE_PHOTO=2;
 
     public DemoFragment() {
         // Required empty public constructor
@@ -30,9 +39,37 @@ public class DemoFragment extends Fragment {
         choosePhotoIntent.setType("image/*");
 
         if(choosePhotoIntent.resolveActivity(getActivity().getPackageManager())!=null){
-            startActivity(choosePhotoIntent);
+            startActivityForResult(choosePhotoIntent,CHOOSE_PHOTO);
         }
         return view;
     }
 
+    private void displayPopupImage(Bitmap bitmapImage){
+        AlertDialog.Builder alertDialog=new AlertDialog.Builder(getActivity());
+        alertDialog.setMessage("You selected this Image!!");
+
+        ImageView imageView=new ImageView(getActivity());
+        imageView.setImageBitmap(bitmapImage);
+
+        alertDialog.setView(imageView);
+        alertDialog.create();
+        alertDialog.show();
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==CHOOSE_PHOTO){
+            if (resultCode== Activity.RESULT_OK){
+                Uri uri=data.getData();
+
+                try {
+                    Bitmap bitmap= MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),uri);
+                    displayPopupImage(bitmap);
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
 }
