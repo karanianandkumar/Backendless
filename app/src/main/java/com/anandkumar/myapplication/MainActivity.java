@@ -15,9 +15,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DemoFragment demoFragment=new DemoFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.container,demoFragment).commit();
+        MenuFragment menuFragment=new MenuFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.container,menuFragment).commit();
 
-        Backendless.initApp(APP_ID,SECRET_KEY,VERSION);
+        Backendless.initApp(this,APP_ID,SECRET_KEY,VERSION);
     }
 }
