@@ -50,7 +50,6 @@ public class DemoFragment extends Fragment {
 
         ImageView imageView=new ImageView(getActivity());
         imageView.setImageBitmap(bitmapImage);
-
         alertDialog.setView(imageView);
         alertDialog.create();
         alertDialog.show();
