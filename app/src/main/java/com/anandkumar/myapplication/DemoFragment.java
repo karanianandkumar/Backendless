@@ -1,6 +1,7 @@
 package com.anandkumar.myapplication;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -25,6 +26,12 @@ public class DemoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_demo, container, false);
 
+        Intent choosePhotoIntent=new Intent(Intent.ACTION_GET_CONTENT);
+        choosePhotoIntent.setType("image/*");
+
+        if(choosePhotoIntent.resolveActivity(getActivity().getPackageManager())!=null){
+            startActivity(choosePhotoIntent);
+        }
         return view;
     }
 

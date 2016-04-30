@@ -10,7 +10,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MainMenuFragment mainMenuFragment=new MainMenuFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.container,mainMenuFragment).commit();
+        DemoFragment demoFragment=new DemoFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.container,demoFragment).commit();
     }
 }
