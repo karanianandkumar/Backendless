@@ -54,6 +54,7 @@ public class DemoFragment extends Fragment {
         alertDialog.setView(imageView);
         alertDialog.create();
         alertDialog.show();
+
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
