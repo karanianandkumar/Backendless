@@ -47,6 +47,8 @@ public class MenuFragment extends Fragment {
 
                 if(position==0){
 
+                    Intent intent=new Intent(getActivity(),LoginActivity.class);
+                    startActivity(intent);
                 }else if(position==1){
                     Intent intent=new Intent(getActivity(),RegisterActivity.class);
                     startActivity(intent);
