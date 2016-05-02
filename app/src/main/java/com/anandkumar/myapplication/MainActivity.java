@@ -15,9 +15,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        MenuFragment menuFragment=new MenuFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.container,menuFragment).commit();
+
 
         Backendless.initApp(this,APP_ID,SECRET_KEY,VERSION);
+
+       if(Backendless.UserService.loggedInUser()==""){
+           MenuFragment menuFragment=new MenuFragment();
+           getSupportFragmentManager().beginTransaction().add(R.id.container,menuFragment).commit();
+        }else{
+           LoggedInFragment loggedInFragment=new LoggedInFragment();
+           getSupportFragmentManager().beginTransaction().add(R.id.container,loggedInFragment).commit();
+       }
     }
 }

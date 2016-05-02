@@ -1,6 +1,7 @@
 package com.anandkumar.myapplication;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -50,9 +51,11 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void handleResponse(BackendlessUser response) {
                         Toast.makeText(getActivity(),
-                                "Successfully Loged in",
+                                "Succefully Loged in",
                                 Toast.LENGTH_SHORT
                         ).show();
+                        Intent intent=new Intent(getActivity(),MainActivity.class);
+                        startActivity(intent);
                     }
 
                     @Override
@@ -63,7 +66,7 @@ public class LoginFragment extends Fragment {
                                 Toast.LENGTH_SHORT
                         ).show();
                     }
-                });
+                },true);
             }
         });
 
