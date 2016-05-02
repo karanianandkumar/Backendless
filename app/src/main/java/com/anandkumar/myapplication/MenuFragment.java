@@ -1,6 +1,7 @@
 package com.anandkumar.myapplication;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 
 /**
@@ -45,7 +45,12 @@ public class MenuFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Toast.makeText(getActivity(),menuItems[position],Toast.LENGTH_SHORT).show();
+                if(position==0){
+
+                }else if(position==1){
+                    Intent intent=new Intent(getActivity(),RegisterActivity.class);
+                    startActivity(intent);
+                }
 
             }
         });
