@@ -48,6 +48,7 @@ public class DemoService extends IntentService {
 
                 if(users.size()!=2){
                     //TODO: ERROR
+                    broadcastAddFriendFailure();
                 }else{
                     final BackendlessUser user1=users.get(0);
                     final BackendlessUser user2=users.get(1);
@@ -60,19 +61,19 @@ public class DemoService extends IntentService {
                             Backendless.UserService.update(user2, new AsyncCallback<BackendlessUser>() {
                                 @Override
                                 public void handleResponse(BackendlessUser response) {
-
+                                    broadcastAddFriendSuccess();
                                 }
 
                                 @Override
                                 public void handleFault(BackendlessFault fault) {
-
+                                    broadcastAddFriendFailure();
                                 }
                             });
                         }
 
                         @Override
                         public void handleFault(BackendlessFault fault) {
-
+                            broadcastAddFriendFailure();
                         }
                     });
                 }
@@ -80,9 +81,20 @@ public class DemoService extends IntentService {
 
             @Override
             public void handleFault(BackendlessFault fault) {
-
+                broadcastAddFriendFailure();
             }
         });
+    }
+
+    private void broadcastAddFriendSuccess(){
+
+        Intent intent=new Intent(Constants.BROADCAST_ADD_FRIEND_SUCCESS);
+        sendBroadcast(intent);
+    }
+    private void broadcastAddFriendFailure(){
+
+        Intent intent=new Intent(Constants.BROADCAST_ADD_FRIEND_FAILURE);
+        sendBroadcast(intent);
     }
 
    private void updateFriendsList(BackendlessUser user,BackendlessUser friend){
