@@ -3,6 +3,7 @@ package com.anandkumar.myapplication;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
+import com.backendless.async.callback.AsyncCallback;
+import com.backendless.exceptions.BackendlessFault;
 
 
 /**
@@ -65,7 +71,29 @@ public class AddFriendFragment extends Fragment {
                 return view;
     }
 
-    private void addAFriend(String s) {
+    private void addAFriend(final String friendName) {
+
+        String currentUserID= Backendless.UserService.loggedInUser();
+        Backendless.Persistence.of(BackendlessUser.class).findById(currentUserID, new AsyncCallback<BackendlessUser>() {
+            @Override
+            public void handleResponse(BackendlessUser curUser) {
+
+                Intent intent=new Intent(getActivity(),DemoService.class);
+                intent.setAction(Constants.ACTION_ADD_FRIEND);
+
+                intent.putExtra("firstUserName",curUser.getProperty("name").toString());
+                intent.putExtra("secondUserName",friendName);
+                getActivity().startService(intent);
+
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+
+            }
+        });
+
+
     }
 
 }

@@ -37,7 +37,8 @@ public class LoggedInFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_logged_in, container, false);
         String [] afterLogin={
                 "Frieds",
-                "Logout"
+                "Logout",
+                "Add Friend"
         };
         loggedInLV=(ListView) view.findViewById(R.id.loggedInpage);
         loggedAdapter=new ArrayAdapter<String>(
@@ -68,6 +69,9 @@ public class LoggedInFragment extends Fragment {
                             Toast.makeText(getActivity(),"Failed to LogOut",Toast.LENGTH_SHORT).show();
                         }
                     });
+                }else if(position==2){
+                    Intent intent=new Intent(getActivity(),AddFriendActivity.class);
+                    startActivity(intent);
                 }
             }
         });
