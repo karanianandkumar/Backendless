@@ -24,13 +24,22 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".FriendsListActivity" />
-        <activity android:name=".AddFriendActivity">
-
-        </activity>
+        <activity android:name=".AddFriendActivity"></activity>
 
         <service
             android:name=".DemoService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <receiver
+            android:name=".DemoReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.anandkumar.myapplication.extra.ADD_FRIEND_SUCCESS"/>
+                <action android:name="com.anandkumar.myapplication.extra.ADD_FRIEND_FAILURE"/>
+            </intent-filter>
+
+        </receiver>
     </application>
 
 </manifest>
