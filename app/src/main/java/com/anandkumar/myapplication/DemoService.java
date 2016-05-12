@@ -32,6 +32,10 @@ public class DemoService extends IntentService {
                 String secondUserName=intent.getStringExtra("secondUserName");
                 Log.i("DemoService","Demo Added Friend"+ firstUserName +" ::: "+secondUserName);
                 addFriends(firstUserName,secondUserName);
+            }else if(action==Constants.ACTION_SEND_FRIEND_REQUEST){
+                String toUser=intent.getStringExtra("toUser");
+                String fromUser=intent.getStringExtra("fromUser");
+                Log.i("Demo Service","Send Friend request to "+toUser+"  from  "+fromUser);
             }
         }
 

@@ -51,7 +51,7 @@ public class AddFriendFragment extends Fragment {
                 alertDialog.setPositiveButton("Add Friend", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        addAFriend(friendName.getText().toString());
+                        sendFriendRequest(friendName.getText().toString());
                         Toast.makeText(getActivity(),"Add a friend",Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -71,7 +71,7 @@ public class AddFriendFragment extends Fragment {
                 return view;
     }
 
-    private void addAFriend(final String friendName) {
+    private void sendFriendRequest(final String friendName) {
 
         String currentUserID= Backendless.UserService.loggedInUser();
         Backendless.Persistence.of(BackendlessUser.class).findById(currentUserID, new AsyncCallback<BackendlessUser>() {
@@ -79,10 +79,10 @@ public class AddFriendFragment extends Fragment {
             public void handleResponse(BackendlessUser curUser) {
 
                 Intent intent=new Intent(getActivity(),DemoService.class);
-                intent.setAction(Constants.ACTION_ADD_FRIEND);
+                intent.setAction(Constants.ACTION_SEND_FRIEND_REQUEST);
 
-                intent.putExtra("firstUserName",curUser.getProperty("name").toString());
-                intent.putExtra("secondUserName",friendName);
+                intent.putExtra("fromUser",curUser.getProperty("name").toString());
+                intent.putExtra("toUser",friendName);
                 getActivity().startService(intent);
 
             }
