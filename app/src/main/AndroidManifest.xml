@@ -24,7 +24,7 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".FriendsListActivity" />
-        <activity android:name=".AddFriendActivity"></activity>
+        <activity android:name=".AddFriendActivity" />
 
         <service
             android:name=".DemoService"
@@ -35,11 +35,14 @@
             android:enabled="true"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.anandkumar.myapplication.extra.ADD_FRIEND_SUCCESS"/>
-                <action android:name="com.anandkumar.myapplication.extra.ADD_FRIEND_FAILURE"/>
+                <action android:name="com.anandkumar.myapplication.extra.ADD_FRIEND_SUCCESS" />
+                <action android:name="com.anandkumar.myapplication.extra.ADD_FRIEND_FAILURE" />
+                <action android:name="com.anandkumar.myapplication.extra.FRIEND_REQUEST_SUCCESS" />
+                <action android:name="com.anandkumar.myapplication.extra.FRIEND_REQUEST_FIALURE" />
             </intent-filter>
-
         </receiver>
+
+        <activity android:name=".FriendRequestsActivity"></activity>
     </application>
 
 </manifest>

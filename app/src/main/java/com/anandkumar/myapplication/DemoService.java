@@ -53,6 +53,7 @@ public class DemoService extends IntentService {
             public void handleResponse(BackendlessCollection<BackendlessUser> response) {
                 if(response.getData().size()==0){
                     //TODO: Broadcast Failuere
+                    broadcastFriendRequestFailure();
                 }else{
                     //Create a friend request.
 
@@ -66,12 +67,14 @@ public class DemoService extends IntentService {
                     Backendless.Persistence.save(friendRequest, new AsyncCallback<FriendRequest>() {
                         @Override
                         public void handleResponse(FriendRequest response) {
-                            broadcastAddFriendSuccess();
+                            broadcastFriendRequestSuccess();
                         }
 
                         @Override
                         public void handleFault(BackendlessFault fault) {
                             //TODO: Broadcast Failuere
+
+                            broadcastFriendRequestFailure();
                         }
                     });
                 }
@@ -80,6 +83,7 @@ public class DemoService extends IntentService {
             @Override
             public void handleFault(BackendlessFault fault) {
                 //TODO: Broadcast Failuere
+                broadcastFriendRequestFailure();
             }
         });
 
@@ -143,6 +147,17 @@ public class DemoService extends IntentService {
         Intent intent=new Intent(Constants.BROADCAST_ADD_FRIEND_FAILURE);
         sendBroadcast(intent);
     }
+
+    private void broadcastFriendRequestSuccess(){
+        Intent intent=new Intent(Constants.BROADCAST_FRIEND_REQUEST_SUCCESS);
+        sendBroadcast(intent);
+    }
+
+    private void broadcastFriendRequestFailure(){
+        Intent intent=new Intent(Constants.BROADCAST_FRIEND_REQUEST_FAILURE);
+        sendBroadcast(intent);
+    }
+
 
    private void updateFriendsList(BackendlessUser user,BackendlessUser friend){
        BackendlessUser[] newFriends;
