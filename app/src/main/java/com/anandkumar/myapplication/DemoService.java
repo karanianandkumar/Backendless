@@ -36,11 +36,54 @@ public class DemoService extends IntentService {
                 String toUser=intent.getStringExtra("toUser");
                 String fromUser=intent.getStringExtra("fromUser");
                 Log.i("Demo Service","Send Friend request to "+toUser+"  from  "+fromUser);
+
+                sendFriendRequest(fromUser,toUser);
             }
         }
 
     }
 
+    private void sendFriendRequest(final String fromUser, final String toUser){
+        //Make sure user exist.
+        BackendlessDataQuery query=new BackendlessDataQuery();
+        query.setWhereClause(String.format("name= '%s'",toUser));
+
+        Backendless.Persistence.of(BackendlessUser.class).find(query, new AsyncCallback<BackendlessCollection<BackendlessUser>>() {
+            @Override
+            public void handleResponse(BackendlessCollection<BackendlessUser> response) {
+                if(response.getData().size()==0){
+                    //TODO: Broadcast Failuere
+                }else{
+                    //Create a friend request.
+
+                    FriendRequest friendRequest=new FriendRequest();
+                    friendRequest.setFromUser(fromUser);
+                    friendRequest.setToUser(toUser);
+                    friendRequest.setAccepted(false);
+
+                    //Save in backendless
+
+                    Backendless.Persistence.save(friendRequest, new AsyncCallback<FriendRequest>() {
+                        @Override
+                        public void handleResponse(FriendRequest response) {
+                            broadcastAddFriendSuccess();
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault fault) {
+                            //TODO: Broadcast Failuere
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                //TODO: Broadcast Failuere
+            }
+        });
+
+    }
     private void addFriends(String firstName,String secondName){
 
         BackendlessDataQuery query=new BackendlessDataQuery();
