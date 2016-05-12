@@ -3,6 +3,7 @@ package com.anandkumar.myapplication;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
@@ -106,9 +106,24 @@ public class FriendRequestsFragment extends Fragment {
         dialog.show();
     }
 
-    private void acceptRequest(FriendRequest friendRequest) {
+    private void acceptRequest(final FriendRequest friendRequest) {
 
-        Toast.makeText(getActivity(),"Accepted Request!",Toast.LENGTH_SHORT).show();
+       friendRequest.setAccepted(true);
+        Backendless.Persistence.save(friendRequest, new AsyncCallback<FriendRequest>() {
+            @Override
+            public void handleResponse(FriendRequest response) {
+                Intent intent=new Intent(getActivity(),DemoService.class);
+                intent.setAction(Constants.ACTION_ADD_FRIEND);
+                intent.putExtra("firstUserName",friendRequest.getFromUser());
+                intent.putExtra("secondUserName",friendRequest.getToUser());
+                getActivity().startService(intent);
+            }
+
+            @Override
+            public void handleFault(BackendlessFault fault) {
+
+            }
+        });
     }
 
     private void getIncomingFriendRequests(String currentUserName) {
