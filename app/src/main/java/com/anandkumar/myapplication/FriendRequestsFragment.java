@@ -1,13 +1,17 @@
 package com.anandkumar.myapplication;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
@@ -26,6 +30,7 @@ import java.util.List;
 public class FriendRequestsFragment extends Fragment {
 
     private ArrayList<String> fromUsers;
+    private ArrayList<FriendRequest> friendRequests;
     private ArrayAdapter<String> adapter;
 
     public FriendRequestsFragment() {
@@ -40,6 +45,7 @@ public class FriendRequestsFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_friend_requests, container, false);
 
         fromUsers=new ArrayList<String>();
+        friendRequests=new ArrayList<FriendRequest>();
         adapter=new ArrayAdapter<String>(
                 getActivity(),
                 android.R.layout.simple_list_item_1,
@@ -48,6 +54,13 @@ public class FriendRequestsFragment extends Fragment {
 
         ListView friendRequests=(ListView)view.findViewById(R.id.friendRequests);
         friendRequests.setAdapter(adapter);
+
+        friendRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showAlertDialog(position);
+            }
+        });
 
         //Get name of the current loggedin user
 
@@ -69,6 +82,35 @@ public class FriendRequestsFragment extends Fragment {
         return view;
     }
 
+    private void showAlertDialog(final int position) {
+
+        AlertDialog.Builder dialog=new AlertDialog.Builder(getActivity());
+        dialog.setMessage("Accept Friend Request from "+ fromUsers.get(position)+ " ?");
+
+        dialog.setNegativeButton("Not Now", new DialogInterface.OnClickListener(){
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                    acceptRequest(friendRequests.get(position));
+            }
+        });
+
+        dialog.create();
+        dialog.show();
+    }
+
+    private void acceptRequest(FriendRequest friendRequest) {
+
+        Toast.makeText(getActivity(),"Accepted Request!",Toast.LENGTH_SHORT).show();
+    }
+
     private void getIncomingFriendRequests(String currentUserName) {
 
         BackendlessDataQuery query=new BackendlessDataQuery();
@@ -81,6 +123,7 @@ public class FriendRequestsFragment extends Fragment {
                 for(FriendRequest request:incomingRequests ){
                     if(!request.isAccepted()){
                         fromUsers.add(request.getFromUser());
+                        friendRequests.add(request);
                     }
                 }
                 adapter.notifyDataSetChanged();
