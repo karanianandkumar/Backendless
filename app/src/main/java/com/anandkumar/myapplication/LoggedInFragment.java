@@ -39,7 +39,8 @@ public class LoggedInFragment extends Fragment {
                 "Frieds",
                 "Logout",
                 "Add Friend",
-                "Friend Requests"
+                "Friend Requests",
+                "Send Picture"
         };
         loggedInLV=(ListView) view.findViewById(R.id.loggedInpage);
         loggedAdapter=new ArrayAdapter<String>(
@@ -75,6 +76,9 @@ public class LoggedInFragment extends Fragment {
                     startActivity(intent);
                 }else if(position==3){
                     Intent intent=new Intent(getActivity(),FriendRequestsActivity.class);
+                    startActivity(intent);
+                }else if(position==4){
+                    Intent intent=new Intent(getActivity(),MainMenuActivity.class);
                     startActivity(intent);
                 }
             }

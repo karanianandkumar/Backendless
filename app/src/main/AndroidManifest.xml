@@ -42,7 +42,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".FriendRequestsActivity"></activity>
+        <activity android:name=".FriendRequestsActivity" />
+        <activity android:name=".MainMenuActivity"></activity>
     </application>
 
 </manifest>

@@ -5,17 +5,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 
 /**
@@ -24,7 +20,8 @@ import java.util.Date;
 public class MainMenuFragment extends Fragment {
 
 
-    public static final int REQUEST_IMAGE_CAPTURE=1;
+    //public static final int REQUEST_IMAGE_CAPTURE=1;
+    public static final int REQUEST_CHOOSE_PHOTO=2;
     private String imageDir;
 
     public MainMenuFragment() {
@@ -37,13 +34,10 @@ public class MainMenuFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_main_menu, container, false);;
-       /* final String menuItems[]={
-                "one",
-                "two",
-                "three",
-                "four"
+        final String menuItems[]={
+                "Send Picture"
         };
-        ListView listView=(ListView)view.findViewById(R.id.listView);
+        ListView listView=(ListView)view.findViewById(R.id.main_menu_listView);
 
         ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(
                 getActivity(),
@@ -56,11 +50,17 @@ public class MainMenuFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    Toast.makeText(getActivity(),menuItems[position],Toast.LENGTH_SHORT).show();
+                   if(position==0){
+                       Intent intent=new Intent();
+                       intent.setType("image/*");
+                       intent.setAction(Intent.ACTION_GET_CONTENT);
+                       startActivityForResult(Intent.createChooser(intent,"Select Picture"),
+                               REQUEST_CHOOSE_PHOTO);
+                   }
 
             }
-        }); */
-        File imageFile=null;
+        });
+        /*File imageFile=null;
 
         try {
                 imageFile=createImgFile();
@@ -78,9 +78,11 @@ public class MainMenuFragment extends Fragment {
                 startActivityForResult(takePhoto,REQUEST_IMAGE_CAPTURE);
             }
         }
+
+        */
         return view;
     }
-    private File createImgFile()throws IOException{
+   /* private File createImgFile()throws IOException{
 
         String timeStamp=new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String fileName="JPEG_"+timeStamp+"_";
@@ -102,12 +104,17 @@ public class MainMenuFragment extends Fragment {
         getActivity().sendBroadcast(mediaScanIntent);
     }
 
+*/
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_IMAGE_CAPTURE){
+        if(requestCode==REQUEST_CHOOSE_PHOTO){
             if(resultCode== Activity.RESULT_OK){
-                addToImageGallary(imageDir);
+              //  addToImageGallary(imageDir);
+                Uri uri=data.getData();
+                Intent intent=new Intent(getActivity(),FriendsListActivity.class);
+                intent.putExtra("imageURI",uri);
+                startActivity(intent);
             }
 
         }
