@@ -1,5 +1,6 @@
 package com.anandkumar.myapplication;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -84,5 +85,12 @@ public class FriendsListFragment extends Fragment {
     private void sendImageToFriend(String currentUser,String toUser,Uri sentImage){
 
         //Start service to send image to friend
+
+        Intent intent=new Intent(getActivity(),DemoService.class);
+        intent.setAction(Constants.ACTION_SEND_PHOTO);
+        intent.putExtra("fromUser",currentUser);
+        intent.putExtra("toUser",toUser);
+        intent.putExtra("imageURI",sentImage);
+        getActivity().startService(intent);
     }
 }

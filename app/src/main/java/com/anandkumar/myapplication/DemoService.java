@@ -2,15 +2,23 @@ package com.anandkumar.myapplication;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.backendless.Backendless;
 import com.backendless.BackendlessCollection;
 import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.files.BackendlessFile;
 import com.backendless.persistence.BackendlessDataQuery;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class DemoService extends IntentService {
@@ -38,9 +46,46 @@ public class DemoService extends IntentService {
                 Log.i("Demo Service","Send Friend request to "+toUser+"  from  "+fromUser);
 
                 sendFriendRequest(fromUser,toUser);
+            }else if(action.equals(Constants.ACTION_SEND_PHOTO)){
+                String fromUser=intent.getStringExtra("fromUser");
+                String toUser=intent.getStringExtra("toUser");
+                Uri imageUri=intent.getParcelableExtra("imageURI");
+                sendPhoto(fromUser,toUser,imageUri);
             }
         }
 
+    }
+
+    private void sendPhoto(String fromUser, String toUser, Uri imageUri) {
+
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+            String timeFormat=new SimpleDateFormat("yyyyMMdd:HHmmss").format(new Date());
+            String fileName="JPEG_"+timeFormat+"_.jpg";
+
+
+            Backendless.Files.Android.upload(
+                    bitmap,
+                    Bitmap.CompressFormat.JPEG,
+                    100,
+                    fileName,
+                    "sendPics",
+                    new AsyncCallback<BackendlessFile>() {
+                        @Override
+                        public void handleResponse(BackendlessFile response) {
+                            Toast.makeText(getApplicationContext(),"Successfully sent to backendless",Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void handleFault(BackendlessFault fault) {
+
+                        }
+                    }
+            );
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
     }
 
     private void sendFriendRequest(final String fromUser, final String toUser){
