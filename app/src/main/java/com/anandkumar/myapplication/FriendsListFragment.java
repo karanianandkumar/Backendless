@@ -1,10 +1,12 @@
 package com.anandkumar.myapplication;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -20,7 +22,7 @@ public class FriendsListFragment extends Fragment {
 
 
     private ArrayList<String> friends;
-    private ArrayAdapter<String> friendsList;
+    private ArrayAdapter<String> friendsListAdapter;
     public FriendsListFragment() {
         // Required empty public constructor
     }
@@ -33,16 +35,17 @@ public class FriendsListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_friends_list, container, false);
 
+        final Uri imageToSend=getActivity().getIntent().getParcelableExtra("imageURI");
         friends=new ArrayList<String>();
-        friendsList=new ArrayAdapter<String>(
+        friendsListAdapter=new ArrayAdapter<String>(
                 getActivity(),
                 android.R.layout.simple_list_item_1,
                 friends
         );
-        ListView friendsLV=(ListView)view.findViewById(R.id.friendsList);
-        friendsLV.setAdapter(friendsList);
+        final ListView friendsList=(ListView)view.findViewById(R.id.friendsList);
+        friendsList.setAdapter(friendsListAdapter);
 
-        String currentUser= Backendless.UserService.loggedInUser();
+        final String currentUser= Backendless.UserService.loggedInUser();
         Backendless.Persistence.of(BackendlessUser.class).findById(currentUser, new AsyncCallback<BackendlessUser>() {
             @Override
             public void handleResponse(BackendlessUser user) {
@@ -54,9 +57,17 @@ public class FriendsListFragment extends Fragment {
 
                         String name=friend.getProperty("name").toString();
                         friends.add(name);
-                        friendsList.notifyDataSetChanged();
+                        friendsListAdapter.notifyDataSetChanged();
                     }
                 }
+                String currentUserName=(String)user.getProperty("name");
+                friendsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String friendName=(String)parent.getItemAtPosition(position);
+                        sendImageToFriend(currentUser,friendName,imageToSend);
+                    }
+                });
 
             }
 
@@ -70,4 +81,8 @@ public class FriendsListFragment extends Fragment {
     }
 
 
+    private void sendImageToFriend(String currentUser,String toUser,Uri sentImage){
+
+        //Start service to send image to friend
+    }
 }
