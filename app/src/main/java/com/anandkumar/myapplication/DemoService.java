@@ -62,23 +62,40 @@ public class DemoService extends IntentService {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
             String timeFormat=new SimpleDateFormat("yyyyMMdd:HHmmss").format(new Date());
             String fileName="JPEG_"+timeFormat+"_.jpg";
+            String fileDirectory="sendPics";
 
+            final SentPicture sentPicture=new SentPicture();
+            sentPicture.setFromUser(fromUser);
+            sentPicture.setToUser(toUser);
+            sentPicture.setImageLocation(fileDirectory+"/"+fileName);
 
             Backendless.Files.Android.upload(
                     bitmap,
                     Bitmap.CompressFormat.JPEG,
                     100,
                     fileName,
-                    "sendPics",
+                    fileDirectory,
                     new AsyncCallback<BackendlessFile>() {
                         @Override
                         public void handleResponse(BackendlessFile response) {
-                            Toast.makeText(getApplicationContext(),"Successfully sent to backendless",Toast.LENGTH_SHORT).show();
+
+
+                            Backendless.Persistence.save(sentPicture, new AsyncCallback<SentPicture>() {
+                                @Override
+                                public void handleResponse(SentPicture response) {
+                                    Toast.makeText(getApplicationContext(),"Successfully sent to backendless",Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void handleFault(BackendlessFault fault) {
+
+                                }
+                            });
                         }
 
                         @Override
                         public void handleFault(BackendlessFault fault) {
-
+                            Toast.makeText(getApplicationContext(),"Failed to store in backendless",Toast.LENGTH_SHORT).show();
                         }
                     }
             );
