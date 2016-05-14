@@ -43,7 +43,8 @@
         </receiver>
 
         <activity android:name=".FriendRequestsActivity" />
-        <activity android:name=".MainMenuActivity"></activity>
+        <activity android:name=".MainMenuActivity" />
+        <activity android:name=".InboxActivity"></activity>
     </application>
 
 </manifest>
